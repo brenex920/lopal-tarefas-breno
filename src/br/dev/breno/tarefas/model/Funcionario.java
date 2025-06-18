@@ -47,8 +47,8 @@ private String setor;
     public String getSetor(){
         return setor;
     }
-    public void setSetor(String setor) {
-        this.setor = setor;
+    public void setSetor(double d) {
+        this.setor = d;
     }
     @Override
     public String toString() {

@@ -1,76 +1,78 @@
 package br.dev.breno.tarefas.dao;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.dev.breno.tarefas.model.Funcionario;
+import br.dev.breno.tarefas.pastas.Pastas;
 
 public class FuncionarioDAO {
-    private String arquivo = "C:\\Users\\breno\\Desktop\\tarefasDS1TA\\tarefas.txt";
+	
+	private Funcionario funcionario;
 
-    private Funcionario funcionario;
-    private FileWriter fw;
-    private BufferedWriter bw;
-    private FileReader fr;
-    private BufferedReader br;
+	public FuncionarioDAO() {
 
-    public FuncionarioDAO(Funcionario funcionario) {
-		this.funcionario = funcionario;
-		try {
-			fw = new FileWriter(arquivo, true);
-			bw = new BufferedWriter(fw);
-			fr = new FileReader(arquivo);
-			br = new BufferedReader(fr);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
 	}
 
-	public void salvar() {
+	public FuncionarioDAO(Funcionario funcionario) {
+		this.funcionario = funcionario;
+	}
+
+	public void gravar() {
 		try {
-			bw.write(funcionario.toString());
-			bw.flush();
-			System.out.println(funcionario.getNome() + " gravado com sucelso!");
+			Pastas ff = new Pastas();
+			ff.getBufferedReader().write(funcionario.toString());
+			ff.getBufferedReader().flush();
+
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
-	public List<Funcionario> getFuncionarios() {
-	    List<Funcionario> funcionarios = new ArrayList<>();
 
-	    try {
-	        String linha = ""; 
-	        
-	        while ((linha = br.readLine()) != null) { 
-	            String[] funcionarioVetor = linha.split(",");
-	            
-	            
-	            if (funcionarioVetor.length >= 4) { 
-	                Funcionario funcionario = new Funcionario();
-	                funcionario.setMatricula(funcionarioVetor[0]);
-	                funcionario.setNome(funcionarioVetor[1]);
-	                funcionario.setCargo(funcionarioVetor[2]);
-	                funcionario.setSetor(funcionarioVetor[3]); 
-	                funcionarios.add(funcionario);
-	            } else {
-	               
-	                System.err.println("Linha malformada ignorada: " + linha);
-	            }
-	        }
-	    } catch (Exception e) {
-	        
-	        System.err.println("Erro ao ler dados dos funcionários: " + e.getMessage());
-	        e.printStackTrace();
-	    } 
-	    
-	    
-	    return funcionarios; 
+	public List<Funcionario> listar() {
+
+		List<Funcionario> funcionarios = new ArrayList<Funcionario>();
+
+		try {
+			Pastas ff = new Pastas();
+			BufferedReader br = ff.getBufferedReader();
+
+			String linha = "";
+
+			br.readLine();
+
+			while (linha != null) {
+				// Extraído uma linha do arquivo
+				linha = br.readLine();
+
+				// Cria um vetor
+				if (linha != null) {
+					String funcioarioStr[] = linha.split(",");
+
+					// Criando um objeto funcionario
+					Funcionario funcionario = new Funcionario();
+					funcionario.setMatricula(funcioarioStr[0]);
+					funcionario.setNome(funcioarioStr[1]);
+					funcionario.setCargo(funcioarioStr[2]);
+					funcionario.setSetor(Double.parseDouble(funcioarioStr[3]));
+
+					funcionarios.add(funcionario);
+
+				}
+
+			}
+
+			return funcionarios;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
+
 }
+
+    
